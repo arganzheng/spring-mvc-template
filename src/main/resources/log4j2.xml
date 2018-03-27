@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+	<Properties>
+		<Property name="log-path">${env:HOME}/logs</Property>
+	</Properties>
+
+	<Appenders>
+		<Console name="console-log" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+		</Console>
+
+		<RollingFile name="main-log" fileName="${log-path}/application-main.log"
+			append="true" filePattern="${log-path}/application-main-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+
+		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush. -->
+		<RollingRandomAccessFile name="profile-log"
+			fileName="${log-path}/application-profile.log" filePattern="${log-path}/application-profile-%d{yyyy-MM-dd}.log"
+			immediateFlush="false" append="false">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingRandomAccessFile>
+
+
+	</Appenders>
+
+	<Loggers>
+		<Logger name="life.arganzheng.study.springmvc" level="debug" additivity="false">
+			<appender-ref ref="main-log" level="info" />
+			<appender-ref ref="console-log" level="info" />
+		</Logger>
+
+		<AsyncLogger name="life.arganzheng.study.springmvc.profile" level="debug"
+			additivity="false">
+			<appender-ref ref="profile-log" />
+		</AsyncLogger>
+
+		<Root level="info" additivity="false">
+			<AppenderRef ref="console-log" />
+		</Root>
+	</Loggers>
+
+</Configuration>
